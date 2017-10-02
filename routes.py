@@ -1,8 +1,14 @@
 from flask import Flask, render_template
+from models import db
+from forms import SignupForm
 
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/learningflask'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
+
+app.secret_key = "amadevcrypt"
 
 @app.route("/")
 def index():
@@ -12,5 +18,10 @@ def index():
 def about():
     return render_template("about.html")
 
+@app.route("/signup")
+def signup():
+    form = SignupForm()
+    return render_template("signup.html", form=form)
+
 if __name__ == "__main__":
-    app.run(host='0.0.0.0',debug=True)
+    app.run(host='127.0.0.1',debug=True)
