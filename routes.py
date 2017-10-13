@@ -32,6 +32,8 @@ def signup():
             return redirect(url_for('home'))
 
     elif request.method == 'GET':
+        if 'email' in session:
+            return redirect(url_for('home'))
         return render_template('signup.html', form=form)
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -50,13 +52,20 @@ def login():
             else:
                 return redirect(url_for('login'))
     if request.method == 'GET':
+        if 'email' in session:
+            return redirect(url_for('home'))
         return render_template('login.html', form=form)
 
-
+@app.route("/logout")
+def logout():
+    session.pop('email', None)
+    return redirect(url_for('index'))
 
 
 @app.route("/home")
 def home():
+    if 'email' not in session:
+        return redirect(url_for('login'))
     return render_template("home.html")
 
 if __name__ == "__main__":
